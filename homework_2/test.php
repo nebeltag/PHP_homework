@@ -11,7 +11,7 @@ do {
   if ($userInput == $bingo){
     echo "Поздравляем! Ваш ответ верный!\n";
       break;} 
-  if ($userInput == $answer1 || $userInput == $answer3) {
+  if ($userInput == $answer1 || $userInput == $answer2 || $userInput == $answer3) {
     echo "Ответ неверный!\n";
       break;} 
 }
