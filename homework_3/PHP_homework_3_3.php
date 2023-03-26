@@ -40,7 +40,7 @@ foreach ($students as $group => $groupList) {
 }
 
 $topGroup = array_keys($middleMark, max($middleMark))[0];
-
+// var_dump(max($middleMark));
 // print_r($middleMark);
 echo "Наивысший балл у группы: $topGroup = $middleMark[$topGroup]\n";
 echo "Список студентов на отчисление за неуспеваемость:\n";
