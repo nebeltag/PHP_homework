@@ -3,7 +3,8 @@
 class UserProvider 
 {
   private array $accounts = [
-    'admin' => '123'
+    'admin' => '123',
+    'max' => '456'
   ];
 
   public function getByUsernameAndPassword(string $username, string $password): ?User
