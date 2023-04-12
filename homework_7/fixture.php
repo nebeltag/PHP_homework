@@ -11,8 +11,15 @@ $pdo->exec('CREATE TABLE users (
   password VARCHAR(100) NOT NULL
 )');
 
-$user = new User('geekbrains');
-$user->setName('GeekBrains PHP');
+$pdo->exec('CREATE TABLE tasks (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  description TEXT NOT NULL
+)');
 
-$userProvider = new UserProvider($pdo);
-$userProvider->registerUser($user, 'password123');
+// $user = new User('geekbrains');
+// $user->setName('GeekBrains PHP');
+
+// $userProvider = new UserProvider($pdo);
+// $userProvider->registerUser($user, 'password123');
+

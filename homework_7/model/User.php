@@ -2,12 +2,34 @@
 
 class User {
 
-  private int $id;
-  private string $username;
+  private ?int $id;
+  private ?string $username;
   private string $name;
 
-  public function __construct(string $username) {
+  public function __construct(int $id = null, string $username = null) {
+    
+    $this->id = $id;
     $this->username = $username;    
+  }
+
+  /**
+   * Get the value of id
+   */ 
+  public function getId() : int
+  {
+    return $this->id;
+  }
+
+  /**
+   * Set the value of id
+   *
+   * @return  self
+   */ 
+  public function setId($id) : self
+  {
+    $this->id = $id;
+
+    return $this;
   }
 
   /**
@@ -50,6 +72,8 @@ class User {
 
     return $this;
   }
+
+  
 
   
 }

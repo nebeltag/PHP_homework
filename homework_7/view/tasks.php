@@ -24,7 +24,7 @@
    <?php foreach ($tasks as $key => $task):?>
    <div>
     <?=$task->getDescription()?> 
-    <a href="/?controller=tasks&action=done&key=<?=$key?>">[Done]</a><br/><br/>
+    <a href="/?controller=tasks&action=done&key=<?=$task->getId()?>">[Done]</a><br/><br/>
    </div>
    <?php endforeach;?>
 

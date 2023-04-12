@@ -12,6 +12,7 @@
   <a href = "/?controller=home">Homepage</a></p>
   <?php else : ?>
     <p>Авторизуйтесь</p>
+    <a href = "/?controller=registration">Sign Up</a>
     <a href = "/?controller=security">Sign In</a>
   <?php endif ?>
 

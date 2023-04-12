@@ -10,8 +10,9 @@ $pdo = require 'db.php';
 if(isset($_GET['action']) && $_GET['action'] === 'logout') {
    unset($_SESSION['username']);
    unset($_SESSION['tasks']);
-   header('Location: index.php');
    session_destroy();
+   header('Location: index.php');
+   die();
  }
 
 $error = null;
@@ -26,6 +27,7 @@ if (isset($_POST['username'], $_POST['password']))
       $error = 'Пользователь с указанными учетными данными не найден';
    } else {
       $_SESSION['username'] = $user;
+      $_SESSION['id'] = $user->getId();
       header('Location: index.php');
       die();
    } 

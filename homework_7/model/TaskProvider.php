@@ -1,58 +1,58 @@
 <?php
 
-class TaskProvider {
+include_once 'model/ITaskProvider.php';
 
-  // хранилище задач
+class TaskProvider implements ITaskProvider
+{ 
 
-  private array $tasks;
+  private PDO $pdo;
 
-  public function __construct () {
+  public function __construct (PDO $pdo) {
 
-    //при создании хранилища читаем задачи из сессии
-    $this->tasks = $_SESSION['tasks'] ?? [];
+    $this->pdo = $pdo;
   }
 
   /**
    * Метод, возвращающий список невыполненных задач
    * @return array
    */
-  public function getUndoneList() : array
+  public function getUndoneList(int $userId) : array
   {
+   $statement = $this->pdo->prepare(
+    'SELECT * FROM tasks WHERE user_id = :id'
+   ); 
 
+   $statement->execute([
+    'id' => $userId,
+   ]);
 
-    /*
-     return array_map(function (Task $task) {
-             return $task->isDone ?: $task;
-            }, $this->task);
-     */
-  
-
-  /**
-   * @var Task $task
-   */
-
-   $tasks = [];
-
-   foreach ($this->tasks as $key => $task) {
-           if (!$task->isDone()) {
-             $tasks[$key] = $task;
-           }
-   }
-
-     return $tasks;     
+   return $statement->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Task::class);
 
   }
 
-  public function addTask(Task $task) : void
+  public function addTask(Task $task, int $userId) : bool
   {
-     $_SESSION['tasks'][] = $task;
-     $this->tasks[] = $task;
+     $statement = $this->pdo->prepare(
+      'INSERT INTO tasks (user_id, description) VALUES (:user_id, :description)'
+     );
+
+     return $statement->execute([
+      'user_id' => $userId,
+      'description' => $task->getDescription(),
+     ]);
   }
 
-  public function deleteTask(int $key) : void
+  public function deleteTask(int $key, int $user_id) : bool
   {
-     unset($_SESSION['tasks'][$key]);
-     unset($this->tasks[$key]);
+    $statement = $this->pdo->prepare(
+      'DELETE FROM tasks WHERE id = :id AND user_id = :user_id'
+     );
+
+     return $statement->execute([
+      'id' => $key,
+      'user_id' => $user_id,
+      
+     ]);
   }
 
 }

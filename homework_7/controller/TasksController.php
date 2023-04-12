@@ -4,6 +4,8 @@ include_once 'model/Task.php';
 include_once 'model/TaskProvider.php';
 include_once 'model/User.php';
 
+$pdo = require 'db.php';
+
 session_start();
 
 $pageHeader = 'Задачи';
@@ -22,13 +24,15 @@ if (isset($_SESSION['username'])) {
   die();
 }
 
-$taskProvider = new TaskProvider();
+$taskProvider = new TaskProvider($pdo);
+
+$user_id = $_SESSION['id'];
 
 //Добавление новой задачи и сохранение ее в сессии
 
 if (isset($_GET['action']) && $_GET['action'] === 'add') {  
   $taskText = strip_tags($_POST['task']);
-  $taskProvider->addTask(new Task($taskText));
+  $taskProvider->addTask(new Task($taskText), $user_id);
   header("Location: /?controller=tasks");
   die();  
 }
@@ -39,11 +43,12 @@ if (isset($_GET['action']) && $_GET['action'] === 'add') {
 
 if (isset($_GET['action']) && $_GET['action'] === 'done') {
   $key = $_GET['key'];
-  $taskProvider->deleteTask($key);
+  $taskProvider->deleteTask($key, $user_id);
   header("Location: /?controller=tasks");
   die();
 }
 
-$tasks = $taskProvider->getUndoneList();
+$tasks = $taskProvider->getUndoneList($user_id);
+
 
 include 'view/tasks.php';

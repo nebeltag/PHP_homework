@@ -1,5 +1,5 @@
 <?php
-
+include_once "exceptions/UserExistsException.php";
 require_once 'User.php';
 
 class UserProvider 
@@ -16,17 +16,26 @@ class UserProvider
     $this->pdo = $pdo;
   }
 
-  public function registerUser (User $user, string $plainPassword) : bool 
+  public function registerUser (User $user, string $plainPassword) 
   {
+
+    $isExistedStatement = $this->pdo->prepare('SELECT id FROM users WHERE username = ?');
+    $isExistedStatement->execute([$user->getUsername()]);
+    if ($isExistedStatement->fetch()) {
+        throw new UserExistsException("Такой пользователь существует");
+    }
+
        $statement = $this->pdo->prepare(
        'INSERT INTO users (name, username, password) VALUES (:name, :username, :password)' 
        );
 
-       return $statement->execute([
+       $statement->execute([
           'name' => $user->getName(),
           'username' => $user->getUserName(),
           'password' => md5($plainPassword)
        ]);
+
+       return $this->pdo->lastInsertId();
   }
 
   public function getByUsernameAndPassword(string $username, string $password): ?User
@@ -42,8 +51,12 @@ class UserProvider
         'password' => md5($password)
       ]);
 
-      return $statement->fetchObject(User::class, [$username]) ?: null;
+      // return $statement->fetchObject(User::class, [$username]) ?: null;
 
+      $statement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class);
+
+        $user = $statement->fetch() ?: null;
+        return $user;
 
           
       //  $expectedPassword = $this->accounts[$username] ?? null;
