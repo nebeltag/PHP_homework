@@ -1,6 +1,7 @@
 <?php
 // ini_set('session.cookie_lifetime', 84600);
 // session_start();
+require 'fixture.php';
 
 $controller = $_GET['controller'] ?? 'index';
 $routes = require ('routes.php');
